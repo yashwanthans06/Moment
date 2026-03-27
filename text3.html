@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Message</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Vidaloka&display=swap" rel="stylesheet">
+
+    <style>
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-family: 'Vidaloka', serif;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .background-container {
+            width: 100vw; height: 100vh;
+            background-image: url('https://i.postimg.cc/PxVsCpR8/image-2026-03-14-181903002.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: background 0.8s ease;
+        }
+
+        .letter-mode {
+            background-image: url('https://i.postimg.cc/50ytsk6Y/image-2026-03-14-185955218.png') !important;
+        }
+
+        .pigeon-wrapper {
+            position: absolute;
+            top: 30%;
+            left: -200px;
+            width: 180px;
+            cursor: pointer;
+            z-index: 999;
+            animation: flyAcross 15s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pigeon {
+            width: 100%;
+            pointer-events: none;
+        }
+
+        @keyframes flyAcross {
+            0% { left: -200px; }
+            100% { left: 110vw; }
+        }
+
+        .hidden { display: none !important; }
+
+        #letter-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .letter-content {
+            padding: 40px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 70vh; 
+            overflow-y: auto; 
+            font-family: 'Vidaloka', serif;
+            scrollbar-width: thin;
+            scrollbar-color: #f5c26e transparent;
+        }
+
+        .letter-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .letter-content::-webkit-scrollbar-thumb {
+            background-color: #f5c26e;
+            border-radius: 10px;
+        }
+
+        #typewriter-text {
+            font-size: 24px;
+            color: #f5c26e !important; 
+            line-height: 1.8;
+            white-space: pre-wrap;
+            padding-bottom: 20px;
+        }
+
+        .close-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 25px;
+            background: #09264f;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 2px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .pigeon-wrapper {
+                width: 130px;
+                top: 25%;
+            }
+            #typewriter-text {
+                font-size: 18px !important;
+            }
+            .letter-content {
+                padding: 20px;
+                width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <p>Preparing Message...</p>
+    </div>
+
+    <audio id="bg-music" preload="auto" loop>
+        <source src="https://www.dropbox.com/scl/fi/m74w08od15f1l066qjdd7/can-t-help-falling-in-love-elvis-presley-piano-cover-by-welder-dias-ytshorts.savetube.vip-online-video-cutter.com.mp3?rlkey=yp4otr7f5d758km5nn55r1b64&st=5nbgu48f&raw=1" type="audio/mpeg">
+    </audio>
+
+    <div class="background-container" id="main-bg">
+        <div id="pigeon-trigger" class="pigeon-wrapper">
+            <img src="https://i.postimg.cc/y8phx0hd/output-onlinegiftools.gif" alt="Pigeon" class="pigeon">
+        </div>
+
+        <div id="letter-modal" class="hidden">
+            <div class="letter-content">
+                <div id="typewriter-text"></div>
+                <button class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bgContainer = document.getElementById('main-bg');
+        const pigeon = document.getElementById('pigeon-trigger');
+        const modal = document.getElementById('letter-modal');
+        const textContainer = document.getElementById('typewriter-text');
+        const closeBtn = document.querySelector('.close-btn');
+        const loader = document.getElementById('loader');
+        const mySong = document.getElementById('bg-music');
+
+        let typingTimer = null; 
+
+        const imageUrls = [
+            'https://i.postimg.cc/PxVsCpR8/image-2026-03-14-181903002.png',
+            'https://i.postimg.cc/50ytsk6Y/image-2026-03-14-185955218.png',
+            'https://i.postimg.cc/y8phx0hd/output-onlinegiftools.gif'
+        ];
+
+        let loadedCount = 0;
+        imageUrls.forEach(url => {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => {
+                loadedCount++;
+                if (loadedCount === imageUrls.length) {
+                    loader.style.display = 'none';
+                }
+            };
+        });
+
+        // The updated message with your requested blending
+        const message = `These are the pieces of writing written in the earlier times before we met and after few talks.
+ 
+I questioned myself, how could I ever write for someone I’ve never met? 
+But there's something about her that I can't explain
+Who are you... an enigma I can't solve?
+But you seem to me be so fascinating that I need to take a moment to praise you.
+
+I've never been to a beach but I know I would love it, the calm and the peace it gives. And you feel the same to me... someone I haven't met yet still my heart feels I could find myself in you.
+
+You are such an angelic girl.
+I can't put you in words but you are the most beautiful girl ever this world could witness. No one could ever be as much beautiful as you.
+
+You don't even need to put on anything to make yourself look good.
+You are like a pearl, no matter where you are or how you feel, you always shine in your own beautiful way.
+What else could I even tell you about your beauty...
+I've never seen someone like you. You are different, you're unique. 
+
+Your beauty is mystery and it remains with you like a timeless history. Your existence feels surreal.
+
+You are not just someone I see, you feel like a truth my heart recognised before I ever had this words to tell you. You existed in me long before I ever found you.
+
+You feel less like a human and more like an angel, came from somewhere beyond to make this world look softer and beautiful with the radiance of your smile just the way you are.
+
+These pieces of words were born in the moment I've been gazing silently at your beauty and admiring every minute thing of you when time paused itself. 
+
+You are lovely, you are kind, you are someone I would spend my entire time admiring you.
+
+How could be this anything, else?
+I feel they call this love... 
+
+What would be us?
+
+If there's "us" ahead , I would always respect your words, would always listen to you, would always compliment your beauty and support you. 
+I don't know what movies you had watched or what books you have read -
+but I know this, I'll build something with you that feels like home.
+I'll carve our story filled with love, happiness, joy, adventures and a pinch of struggles - to make it a beautiful and lovely way for us to be together.
+
+I love you.
+`;
+
+        pigeon.onclick = function() {
+            bgContainer.classList.add('letter-mode');
+            pigeon.style.display = 'none'; 
+            modal.classList.remove('hidden');
+            
+            mySong.play().catch(e => console.log("Audio play blocked:", e));
+            
+            clearInterval(typingTimer);
+            startTyping();
+        };
+
+        function startTyping() {
+            let i = 0;
+            textContainer.textContent = ""; 
+            
+            typingTimer = setInterval(() => {
+                if (i < message.length) {
+                    textContainer.textContent += message[i];
+                    i++;
+                    const modalContent = document.querySelector('.letter-content');
+                    modalContent.scrollTop = modalContent.scrollHeight;
+                } else {
+                    clearInterval(typingTimer);
+                }
+            }, 80); 
+        }
+
+        closeBtn.onclick = function() {
+            bgContainer.classList.remove('letter-mode');
+            modal.classList.add('hidden');
+            pigeon.style.display = 'flex'; 
+            
+            clearInterval(typingTimer);
+            textContainer.textContent = ""; 
+            mySong.pause();
+            mySong.currentTime = 0;
+        };
+    </script>
+</body>
+</html>
